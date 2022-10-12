@@ -1,1 +1,1 @@
-# kotlin-native-openssl
+# konabis - Kotlin Native Bindings

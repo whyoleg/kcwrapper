@@ -1,0 +1,2 @@
+staticLibraries = libcrypto.a
+libraryPaths = /home/linuxbrew/.linuxbrew/lib

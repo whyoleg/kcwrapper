@@ -1,0 +1,3 @@
+package = konabis.libcrypto
+headers = openssl/sha.h
+headerFilter = openssl/*
