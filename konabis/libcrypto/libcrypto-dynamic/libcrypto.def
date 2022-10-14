@@ -1,2 +1,0 @@
-linkerOpts.linux = -lcrypto \
- -L/home/linuxbrew/.linuxbrew/lib

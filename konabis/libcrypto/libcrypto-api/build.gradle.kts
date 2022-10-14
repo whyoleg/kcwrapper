@@ -6,18 +6,12 @@ plugins {
 }
 
 kotlin {
-    sourceSets {
-        commonMain {
-            dependencies {
-                api(project(":libcrypto:libcrypto-api"))
-            }
-        }
-    }
     targets.all {
         if (this !is KotlinNativeTarget) return@all
         val main by compilations.getting {
             val libcrypto by cinterops.creating {
-                defFile("../libcrypto-interop/static.def")
+                defFile("../libcrypto-interop/api.def")
+                includeDirs("/home/linuxbrew/.linuxbrew/Cellar/openssl@1.1/1.1.1q/include")
             }
         }
     }

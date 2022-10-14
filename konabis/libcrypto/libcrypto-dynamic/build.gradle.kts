@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.plugin.mpp.*
+import org.jetbrains.kotlin.gradle.targets.native.tasks.*
 
 plugins {
     id("buildx-multiplatform")
@@ -9,33 +10,20 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                api(project(":libcrypto"))
+                api(project(":libcrypto:libcrypto-api"))
             }
         }
     }
     targets.all {
         if (this !is KotlinNativeTarget) return@all
         val main by compilations.getting {
-            val libcryptoDynamic by cinterops.creating {
-                defFile("libcrypto.def")
+            val libcrypto by cinterops.creating {
+                defFile("../libcrypto-interop/dynamic.def")
             }
         }
-
-//        if (name == "linuxX64") {
-//            val main by compilations.getting {
-//                val libcrypto by cinterops.creating {
-//                    defFile("libcrypto.def")
-//                }
-//            }
-//
-////            compilations.all {
-////                kotlinOptions {
-////                    freeCompilerArgs += listOf(
-////                        "-library",
-////                        "/home/linuxbrew/.linuxbrew/Cellar/openssl@1.1/1.1.1q/lib/libcrypto.so",
-////                    )
-////                }
-////            }
-//        }
     }
+}
+
+tasks.withType<KotlinNativeHostTest> {
+    environment("LD_LIBRARY_PATH", "/home/linuxbrew/.linuxbrew/Cellar/openssl@1.1/1.1.1q/lib")
 }

@@ -7,7 +7,7 @@ kotlin {
         binaries {
             executable {
                 entryPoint = "main"
-                runTask!!.environment("LD_LIBRARY_PATH", "/home/linuxbrew/.linuxbrew/Cellar/openssl@1.1/1.1.1q/lib")
+//                runTask!!.environment("LD_LIBRARY_PATH", "/home/linuxbrew/.linuxbrew/Cellar/openssl@1.1/1.1.1q/lib")
             }
         }
         compilations.all {
