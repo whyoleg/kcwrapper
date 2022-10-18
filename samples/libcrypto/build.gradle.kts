@@ -23,7 +23,7 @@ kotlin {
     sourceSets {
         val linuxX64Main by getting {
             dependencies {
-                implementation("dev.whyoleg.konabis:libcrypto-static:0.1.0")
+                implementation("dev.whyoleg.kcwrapper:libcrypto-static:0.1.0")
             }
         }
     }

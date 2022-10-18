@@ -1,0 +1,2 @@
+staticLibraries = libcrypto.a
+libraryPaths.mingw_x64 = C:/msys64/mingw64/lib

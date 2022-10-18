@@ -1,4 +1,0 @@
-package = konabis.libcrypto3
-headers = openssl/sha.h
-headerFilter = openssl/*
-linkerOpts.linux= /usr/lib/x86_64-linux-gnu/libcrypto.so.3 --allow-shlib-undefined

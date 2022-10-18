@@ -1,4 +1,4 @@
-import konabis.libcrypto.*
+import kcwrapper.libcrypto.*
 import kotlinx.cinterop.*
 
 fun main() {

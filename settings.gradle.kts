@@ -3,6 +3,9 @@ pluginManagement {
         gradlePluginPortal()
         mavenCentral()
     }
+    includeBuild("gradle/buildx") {
+        name = "kcwrapper-buildx"
+    }
 }
 
 dependencyResolutionManagement {
@@ -11,7 +14,18 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "konabis-root"
+rootProject.name = "kcwrapper"
 
-includeBuild("konabis")
-//includeBuild("samples/libcrypto")
+//includeBuild("kcwrapper-gradle-plugin") //TODO: move to plugin management?
+
+fun includeLibrary(name: String) {
+    listOf("api", "dynamic", "static").forEach {
+        include("kcwrapper-libraries:$name:$name-$it")
+    }
+}
+
+includeLibrary("libcrypto")
+//includeLibrary("libssl")
+//includeLibrary("libcrypto3")
+//includeLibrary("libssl3")
+//includeLibrary("libcurl")
