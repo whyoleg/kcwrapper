@@ -18,13 +18,17 @@ rootProject.name = "kcwrapper"
 
 //includeBuild("kcwrapper-gradle-plugin") //TODO: move to plugin management?
 
-fun includeLibrary(name: String) {
-    listOf("api", "dynamic", "static").forEach {
-        include("kcwrapper-libraries:$name:$name-$it")
+fun includeLibrary(libraryName: String, vararg submodules: String) {
+    submodules.forEach {
+        val projectName = "$libraryName-$it"
+        val projectPath = "$libraryName:$projectName"
+        include(projectPath)
+        project(":$projectPath").projectDir = file("kcwrapper-libraries/$libraryName/$projectName")
     }
 }
 
-includeLibrary("libcrypto")
+includeLibrary("libcrypto", "cinterop-api", "cinterop-dynamic", "cinterop-static", "cinterop-tests")
+
 //includeLibrary("libssl")
 //includeLibrary("libcrypto3")
 //includeLibrary("libssl3")

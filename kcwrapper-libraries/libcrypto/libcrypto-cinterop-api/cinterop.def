@@ -1,4 +1,4 @@
-package = kcwrapper.libcrypto
+package = kcwrapper.libcrypto.interop
 headers = openssl/sha.h
 headerFilter = openssl/*
 compilerOpts.mingw_x64 = -IC:/msys64/mingw64/include

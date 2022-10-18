@@ -1,4 +1,4 @@
-import kcwrapper.libcrypto.*
+import kcwrapper.libcrypto.interop.*
 import kotlinx.cinterop.*
 import kotlin.test.*
 
