@@ -29,7 +29,11 @@ fun includeLibrary(libraryName: String, vararg submodules: String) {
 
 includeLibrary("libcrypto", "cinterop-api", "cinterop-dynamic", "cinterop-static", "cinterop-tests")
 
-//includeLibrary("libssl")
+//includeLibrary("libssl", "cinterop-api")
+
+include("samples:libcrypto-sample")
+project(":samples:libcrypto-sample").projectDir = file("samples/libcrypto")
+
 //includeLibrary("libcrypto3")
 //includeLibrary("libssl3")
 //includeLibrary("libcurl")

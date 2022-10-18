@@ -3,27 +3,18 @@ plugins {
 }
 
 kotlin {
-    linuxX64 {
+    mingwX64 {
         binaries {
             executable {
                 entryPoint = "main"
-//                runTask!!.environment("LD_LIBRARY_PATH", "/home/linuxbrew/.linuxbrew/Cellar/openssl@1.1/1.1.1q/lib")
-            }
-        }
-        compilations.all {
-            kotlinOptions {
-                freeCompilerArgs += listOf(
-//                    "-linker-option", "/home/linuxbrew/.linuxbrew/Cellar/openssl@1.1/1.1.1q/lib/libcrypto.so",
-//                    "-linker-option", "--allow-shlib-undefined"
-                )
             }
         }
     }
 
     sourceSets {
-        val linuxX64Main by getting {
+        commonMain {
             dependencies {
-                implementation("dev.whyoleg.kcwrapper:libcrypto-static:0.1.0")
+                implementation(project(":libcrypto:libcrypto-cinterop-static"))
             }
         }
     }
