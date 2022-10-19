@@ -1,0 +1,4 @@
+package = kcwrapper.libcrypto.interop.config
+headers = openssl/e_os2.h
+headerFilter = openssl/*
+compilerOpts.mingw_x64 = -IC:/msys64/mingw64/include
