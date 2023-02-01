@@ -1,4 +1,0 @@
-package = kcwrapper.libcrypto.interop.bn
-headers = openssl/bn.h
-headerFilter = openssl/*
-compilerOpts.mingw_x64 = -IC:/msys64/mingw64/include

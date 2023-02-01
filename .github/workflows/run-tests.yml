@@ -1,0 +1,75 @@
+name: Run tests on all platforms
+on: [ workflow_call, workflow_dispatch ]
+
+jobs:
+  default-test:
+    name: Run tests
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ 'ubuntu-20.04', 'ubuntu-latest', 'macos-latest', 'macos-12', 'windows-latest' ]
+        linuxbrew: [ false ]
+        macosbrew: [ false ]
+        include:
+          - os: 'ubuntu-20.04'
+            linuxbrew: true
+          - os: 'ubuntu-latest'
+            linuxbrew: true
+          - os: 'macos-latest'
+            macosbrew: true
+          - os: 'macos-12'
+            macosbrew: true
+    steps:
+      - uses: actions/checkout@v3
+      - if: matrix.os != 'windows-latest'
+        run: echo "KONAN_DATA_DIR=${HOME}/.gradle/konan" >> $GITHUB_ENV
+      - if: matrix.os == 'windows-latest'
+        run: echo "KONAN_DATA_DIR=${USERPROFILE}\.gradle\konan" >> $GITHUB_ENV
+        shell: bash
+
+      - if: matrix.linuxbrew
+        uses: Homebrew/actions/setup-homebrew@master
+      - if: matrix.linuxbrew
+        run: brew install openssl@3
+      - if: matrix.macosbrew
+        run: brew install openssl@3
+
+      - if: matrix.os == 'windows-latest'
+        uses: msys2/setup-msys2@v2
+        with:
+          release: false
+          update: true
+          install: mingw-w64-x86_64-openssl
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Run tests
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: |
+            check
+            --scan
+            --continue
+          gradle-home-cache-includes: |
+            caches
+            notifications
+            konan
+            nodejs
+            yarn
+      - name: Publish to Maven Local
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: |
+            publishToMavenLocal
+            --scan
+            --continue
+          gradle-home-cache-includes: |
+            caches
+            notifications
+            konan
+            nodejs
+            yarn

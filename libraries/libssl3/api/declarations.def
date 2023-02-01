@@ -1,0 +1,3 @@
+package = dev.whyoleg.kcwrapper.libssl3.cinterop
+headerFilter = openssl/*
+headers = openssl/ssl.h

@@ -1,0 +1,3 @@
+package = dev.whyoleg.kcwrapper.libcrypto3.cinterop
+headerFilter = openssl/*
+headers = openssl/evp.h

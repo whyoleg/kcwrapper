@@ -1,4 +1,0 @@
-package = kcwrapper.libssl.interop
-headers = openssl/ssl.h
-headerFilter = openssl/*
-compilerOpts.mingw_x64 = -IC:/msys64/mingw64/include

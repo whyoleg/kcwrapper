@@ -1,8 +1,15 @@
 [versions]
-kotlin = "1.7.20"
+kotlin = "1.8.0"
+openssl3 = "3.0.7-alpha3"
+
+gradle-versions = "0.44.0"
+gradle-download = "5.3.0"
 
 [libraries]
 build-kotlin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+
+gradle-versions = { id = "com.github.ben-manes.versions", version.ref = "gradle-versions" }
+gradle-download = { id = "de.undercouch.download", version.ref = "gradle-download" }

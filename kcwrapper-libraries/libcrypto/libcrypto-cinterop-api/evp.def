@@ -1,4 +1,0 @@
-package = kcwrapper.libcrypto.interop.evp
-headers = openssl/evp.h
-headerFilter = openssl/*
-compilerOpts.mingw_x64 = -IC:/msys64/mingw64/include

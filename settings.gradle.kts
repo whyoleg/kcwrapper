@@ -1,11 +1,11 @@
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
 pluginManagement {
     repositories {
         gradlePluginPortal()
         mavenCentral()
     }
-    includeBuild("gradle/buildx") {
-        name = "kcwrapper-buildx"
-    }
+    includeBuild("gradle/plugins")
 }
 
 dependencyResolutionManagement {
@@ -14,26 +14,25 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "kcwrapper"
+plugins {
+    //this version can not be moved to version catalog, because it's in settings.gradle.kts
+    id("com.gradle.enterprise") version "3.12.2"
+}
 
-//includeBuild("kcwrapper-gradle-plugin") //TODO: move to plugin management?
-
-fun includeLibrary(libraryName: String, vararg submodules: String) {
-    submodules.forEach {
-        val projectName = "$libraryName-$it"
-        val projectPath = "$libraryName:$projectName"
-        include(projectPath)
-        project(":$projectPath").projectDir = file("kcwrapper-libraries/$libraryName/$projectName")
+gradleEnterprise {
+    buildScan {
+        termsOfServiceUrl = "https://gradle.com/terms-of-service"
+        termsOfServiceAgree = "yes"
     }
 }
 
-includeLibrary("libcrypto", "cinterop-api", "cinterop-dynamic", "cinterop-static", "cinterop-tests")
+rootProject.name = "kcwrapper"
 
-//includeLibrary("libssl", "cinterop-api")
+fun includeLibrary(name: String) {
+    listOf("api", "static", "dynamic").forEach { submodule ->
+        include("libraries:$name:$name-$submodule")
+        project(":libraries:$name:$name-$submodule").projectDir = file("libraries/$name/$submodule")
+    }
+}
 
-include("samples:libcrypto-sample")
-project(":samples:libcrypto-sample").projectDir = file("samples/libcrypto")
-
-//includeLibrary("libcrypto3")
-//includeLibrary("libssl3")
-//includeLibrary("libcurl")
+includeLibrary("libcrypto3")
