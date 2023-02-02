@@ -1,16 +1,13 @@
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
-
 pluginManagement {
     repositories {
         gradlePluginPortal()
         mavenCentral()
     }
-    includeBuild("gradle/plugins")
-    includeBuild("kcwrapper-gradle-plugin")
 }
 
 dependencyResolutionManagement {
     repositories {
+        gradlePluginPortal()
         mavenCentral()
     }
 }
@@ -27,13 +24,4 @@ gradleEnterprise {
     }
 }
 
-rootProject.name = "kcwrapper"
-
-fun includeLibrary(name: String) {
-    listOf("api", "static", "dynamic").forEach { submodule ->
-        include("libraries:$name:$name-$submodule")
-        project(":libraries:$name:$name-$submodule").projectDir = file("libraries/$name/$submodule")
-    }
-}
-
-includeLibrary("libcrypto3")
+rootProject.name = "kcwrapper-gradle-plugin"

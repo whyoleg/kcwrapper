@@ -1,3 +1,4 @@
+import dev.whyoleg.kcwrapper.gradle.plugin.*
 import org.jetbrains.kotlin.gradle.plugin.mpp.*
 import org.jetbrains.kotlin.gradle.targets.native.*
 import org.jetbrains.kotlin.gradle.targets.native.tasks.*
@@ -6,6 +7,7 @@ import org.jetbrains.kotlin.konan.target.*
 
 plugins {
     id("buildx-multiplatform-library")
+    id("dev.whyoleg.kcwrapper")
 }
 
 kotlin {
@@ -30,55 +32,22 @@ kotlin {
     }
 }
 
-val unzipPrebuiltOpenSSL3 = parent!!.tasks.named<Sync>("unzipPrebuiltOpenSSL3")
+val prebuiltSetup = kcwrapper.root.openssl3PrebuiltSetupTaskProvider
 
 tasks.withType<KotlinNativeLink>().configureEach {
-    dependsOn(unzipPrebuiltOpenSSL3)
-
-    val prebuiltName = when (val konanTarget = binary.target.konanTarget) {
-        KonanTarget.IOS_ARM64           -> "ios-device-arm64"
-        KonanTarget.IOS_SIMULATOR_ARM64 -> "ios-simulator-arm64"
-        KonanTarget.IOS_X64             -> "ios-simulator-x64"
-        KonanTarget.LINUX_X64           -> "linux-x64"
-        KonanTarget.MACOS_ARM64         -> "macos-arm64"
-        KonanTarget.MACOS_X64           -> "macos-x64"
-        KonanTarget.MINGW_X64           -> "mingw-x64"
-        else                            -> TODO("Unsupported target: $konanTarget")
-    }
-
-    binary.linkerOpts("-L${unzipPrebuiltOpenSSL3.get().destinationDir.resolve("$prebuiltName/lib").absolutePath}")
+    dependsOn(prebuiltSetup)
+    binary.linkerOpts("-L${prebuiltSetup.get().libDir(binary.target.konanTarget.toOpenssl3Target()).absolutePath}")
 }
 
 tasks.withType<KotlinNativeTest>().configureEach {
-    dependsOn(unzipPrebuiltOpenSSL3)
+    dependsOn(prebuiltSetup)
 
-    val prebuiltName = when (val konanTarget = HostManager.host) {
-        KonanTarget.IOS_ARM64           -> "ios-device-arm64"
-        KonanTarget.IOS_SIMULATOR_ARM64 -> "ios-simulator-arm64"
-        KonanTarget.IOS_X64             -> "ios-simulator-x64"
-        KonanTarget.LINUX_X64           -> "linux-x64"
-        KonanTarget.MACOS_ARM64         -> "macos-arm64"
-        KonanTarget.MACOS_X64           -> "macos-x64"
-        KonanTarget.MINGW_X64           -> "mingw-x64"
-        else                            -> TODO("Unsupported target: $konanTarget")
-    }
-
-    //TODO?
+    val libraryPath = prebuiltSetup.get().libDir(HostManager.host.toOpenssl3Target()).absolutePath
+    //TODO - will it work?
     when (HostManager.host) {
-        KonanTarget.LINUX_X64 -> {
-            environment(
-                "LD_LIBRARY_PATH",
-                unzipPrebuiltOpenSSL3.get().destinationDir.resolve("$prebuiltName/lib").absolutePath
-            )
-        }
-        KonanTarget.MACOS_X64 -> {
-            environment(
-                "DYLD_LIBRARY_PATH",
-                unzipPrebuiltOpenSSL3.get().destinationDir.resolve("$prebuiltName/lib").absolutePath
-            )
-        }
-        else                  -> {
-            //do nothing
-        }
+        KonanTarget.LINUX_X64                          -> environment("LD_LIBRARY_PATH", libraryPath)
+        KonanTarget.MACOS_X64, KonanTarget.MACOS_ARM64 -> environment("DYLD_LIBRARY_PATH", libraryPath)
+        KonanTarget.MINGW_X64                          -> environment("PATH", libraryPath)
+        else                                           -> error("Unsupported host: ${HostManager.host}")
     }
 }
