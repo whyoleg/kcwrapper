@@ -44,9 +44,9 @@ if (HostManager.host.family == Family.LINUX) {
         dependsOn(prebuiltSetup)
         binary.linkerOpts("-L${prebuiltSetup.get().dynamicLibDir(target).absolutePath}")
     }
-    tasks.withType<KotlinNativeTest>().configureEach {
-        dependsOn(prebuiltSetup)
-        val libraryPath = prebuiltSetup.get().dynamicLibDir(target).absolutePath
-        environment("LD_LIBRARY_PATH", libraryPath)
-    }
+//    tasks.withType<KotlinNativeTest>().configureEach {
+//        dependsOn(prebuiltSetup)
+//        val libraryPath = prebuiltSetup.get().dynamicLibDir(target).absolutePath
+//        environment("LD_LIBRARY_PATH", libraryPath)
+//    }
 }
