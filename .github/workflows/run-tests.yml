@@ -8,7 +8,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ 'ubuntu-latest', 'macos-latest', 'windows-latest' ]
+        os: [ 'ubuntu-20.04', 'ubuntu-latest', 'macos-latest', 'macos-12', 'windows-latest' ]
+        linuxbrew: [ false ]
+        macosbrew: [ false ]
+        include:
+          - os: 'ubuntu-20.04'
+            linuxbrew: true
+          - os: 'ubuntu-latest'
+            linuxbrew: true
+          - os: 'macos-latest'
+            macosbrew: true
+          - os: 'macos-12'
+            macosbrew: true
     steps:
       - uses: actions/checkout@v3
       - if: matrix.os != 'windows-latest'
@@ -16,6 +27,13 @@ jobs:
       - if: matrix.os == 'windows-latest'
         run: echo "KONAN_DATA_DIR=${USERPROFILE}\.gradle\konan" >> $GITHUB_ENV
         shell: bash
+
+      - if: matrix.linuxbrew
+        uses: Homebrew/actions/setup-homebrew@master
+      - if: matrix.linuxbrew
+        run: brew install openssl@3
+      - if: matrix.macosbrew
+        run: brew install openssl@3
 
       - if: matrix.os == 'windows-latest'
         uses: msys2/setup-msys2@v2
@@ -36,12 +54,13 @@ jobs:
             check
             --scan
             --continue
-          gradle-home-cache-includes: |
-            caches
-            notifications
-            konan
-            nodejs
-            yarn
+          cache-disabled: true
+      #          gradle-home-cache-includes: |
+      #            caches
+      #            notifications
+      #            konan
+      #            nodejs
+      #            yarn
       - name: Publish to Maven Local
         uses: gradle/gradle-build-action@v2
         with:
@@ -49,9 +68,10 @@ jobs:
             publishToMavenLocal
             --scan
             --continue
-          gradle-home-cache-includes: |
-            caches
-            notifications
-            konan
-            nodejs
-            yarn
+          cache-disabled: true
+#          gradle-home-cache-includes: |
+#            caches
+#            notifications
+#            konan
+#            nodejs
+#            yarn
