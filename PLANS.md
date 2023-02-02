@@ -1,11 +1,5 @@
 # 0.1.0 Initial release
 
-* [ ] libcrypto (v3) dynamic/static
-* [ ] some minimal tests (like SHA + Version)
-* [ ] gradle plugin
-* [ ] move download openssl to plugin
-* [ ] download openssl in project (once)
-* [ ] download openssl in plugin (once)
 * [ ] apply some plugins (like in cryptograph-kotlin) - bom, VC, dokka (?), etc
 * [ ] GitHub Snapshots
 * [ ] Maven Central
@@ -21,6 +15,7 @@
 # x.y.z plans
 
 * [ ] libcrypto/libssl build for JVM and JS/WASM with minimal set of declarations (check skiko)
+* [ ] better dynamic testing support
 
 # Notes
 

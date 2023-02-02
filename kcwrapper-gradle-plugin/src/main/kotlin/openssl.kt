@@ -6,7 +6,8 @@ import java.io.*
 
 /*sealed*/ interface Openssl3PrebuiltSetupTask : Task {
     fun includeDir(target: Openssl3Target): File
-    fun libDir(target: Openssl3Target): File
+    fun dynamicLibDir(target: Openssl3Target): File
+    fun staticLibDir(target: Openssl3Target): File
 
     companion object {
         const val NAME: String = "openssl3PrebuiltSetup"

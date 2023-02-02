@@ -13,7 +13,7 @@ class KCWrapperRootPlugin : Plugin<Project> {
         val opensslBuildDir = buildDir.resolve("openssl3")
 
         val zipFileTree = tasks.register(Openssl3PrebuiltDownloadTask.NAME, Openssl3PrebuiltDownloadTaskImpl::class.java) {
-            it.src("https://github.com/whyoleg/openssl-builds/releases/download/3.0.7-alpha3/openssl3-all.zip")
+            it.src("https://github.com/whyoleg/openssl-builds/releases/download/3.0.7-alpha4/openssl3-all.zip")
             it.onlyIfModified(true)
             it.overwrite(false)
             it.dest(opensslBuildDir.resolve("prebuilt.zip"))
