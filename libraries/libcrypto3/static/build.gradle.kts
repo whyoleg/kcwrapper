@@ -27,7 +27,7 @@ kotlin {
         if (this !is KotlinNativeTarget) return@all
 
         val main by compilations.getting {
-            val linking by cinterops.creating {
+            val static by cinterops.creating {
                 defFile("linking.def")
             }
         }

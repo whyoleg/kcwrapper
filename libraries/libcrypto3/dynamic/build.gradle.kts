@@ -31,26 +31,28 @@ kotlin {
         if (this !is KotlinNativeTarget) return@all
 
         val main by compilations.getting {
-            val linking by cinterops.creating {
+            val dynamic by cinterops.creating {
                 defFile("linking.def")
             }
         }
     }
 }
 
-tasks.withType<KotlinNativeLink>().configureEach {
-    dependsOn(prebuiltSetup)
-    binary.linkerOpts("-L${prebuiltSetup.get().libDir(binary.target.konanTarget.toOpenssl3Target()).absolutePath}")
-}
+//tasks.withType<KotlinNativeLink>().configureEach {
+//    if (binary.target.konanTarget.family != Family.LINUX) return@configureEach
+//
+//    dependsOn(prebuiltSetup)
+//    binary.linkerOpts("-L${prebuiltSetup.get().libDir(binary.target.konanTarget.toOpenssl3Target()).absolutePath.also(::println)}")
+//}
 
-tasks.withType<KotlinNativeTest>().configureEach {
-    dependsOn(prebuiltSetup)
-
-    val libraryPath = prebuiltSetup.get().libDir(HostManager.host.toOpenssl3Target()).absolutePath
-    when (HostManager.host) {
-        KonanTarget.LINUX_X64                          -> environment("LD_LIBRARY_PATH", libraryPath)
-        KonanTarget.MACOS_X64, KonanTarget.MACOS_ARM64 -> environment("DYLD_LIBRARY_PATH", libraryPath)
-        KonanTarget.MINGW_X64                          -> environment("PATH", libraryPath)
-        else                                           -> error("Unsupported host: ${HostManager.host}")
-    }
-}
+//tasks.withType<KotlinNativeTest>().configureEach {
+//    dependsOn(prebuiltSetup)
+//
+//    val libraryPath = prebuiltSetup.get().libDir(HostManager.host.toOpenssl3Target()).absolutePath
+//    when (HostManager.host) {
+//        KonanTarget.LINUX_X64                          -> environment("LD_LIBRARY_PATH", libraryPath)
+//        KonanTarget.MACOS_X64, KonanTarget.MACOS_ARM64 -> environment("DYLD_LIBRARY_PATH", libraryPath)
+//        KonanTarget.MINGW_X64                          -> environment("PATH", libraryPath)
+//        else                                           -> error("Unsupported host: ${HostManager.host}")
+//    }
+//}
