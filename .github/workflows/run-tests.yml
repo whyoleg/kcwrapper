@@ -54,12 +54,13 @@ jobs:
             check
             --scan
             --continue
-          gradle-home-cache-includes: |
-            caches
-            notifications
-            konan
-            nodejs
-            yarn
+          cache-disabled: true
+      #          gradle-home-cache-includes: |
+      #            caches
+      #            notifications
+      #            konan
+      #            nodejs
+      #            yarn
       - name: Publish to Maven Local
         uses: gradle/gradle-build-action@v2
         with:
@@ -67,9 +68,10 @@ jobs:
             publishToMavenLocal
             --scan
             --continue
-          gradle-home-cache-includes: |
-            caches
-            notifications
-            konan
-            nodejs
-            yarn
+          cache-disabled: true
+#          gradle-home-cache-includes: |
+#            caches
+#            notifications
+#            konan
+#            nodejs
+#            yarn
