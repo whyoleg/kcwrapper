@@ -38,12 +38,10 @@ kotlin {
     }
 }
 
-//tasks.withType<KotlinNativeLink>().configureEach {
-//    if (binary.target.konanTarget.family != Family.LINUX) return@configureEach
-//
-//    dependsOn(prebuiltSetup)
-//    binary.linkerOpts("-L${prebuiltSetup.get().libDir(binary.target.konanTarget.toOpenssl3Target()).absolutePath.also(::println)}")
-//}
+tasks.withType<KotlinNativeLink>().configureEach {
+    dependsOn(prebuiltSetup)
+    binary.linkerOpts("-L${prebuiltSetup.get().libDir(binary.target.konanTarget.toOpenssl3Target()).absolutePath.also(::println)}")
+}
 
 //tasks.withType<KotlinNativeTest>().configureEach {
 //    dependsOn(prebuiltSetup)
