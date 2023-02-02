@@ -30,7 +30,7 @@ gradleEnterprise {
 rootProject.name = "kcwrapper"
 
 fun includeLibrary(name: String) {
-    listOf("api", "static", "dynamic").forEach { submodule ->
+    listOf("api", "static", "dynamic", "test").forEach { submodule ->
         include("libraries:$name:$name-$submodule")
         project(":libraries:$name:$name-$submodule").projectDir = file("libraries/$name/$submodule")
     }

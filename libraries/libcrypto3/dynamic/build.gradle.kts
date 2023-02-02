@@ -1,6 +1,5 @@
 import dev.whyoleg.kcwrapper.gradle.plugin.*
 import org.jetbrains.kotlin.gradle.plugin.mpp.*
-import org.jetbrains.kotlin.gradle.targets.native.*
 import org.jetbrains.kotlin.gradle.targets.native.tasks.*
 import org.jetbrains.kotlin.gradle.tasks.*
 import org.jetbrains.kotlin.konan.target.*
@@ -17,6 +16,11 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(projects.libraries.libcrypto3.libcrypto3Api)
+            }
+        }
+        val commonTest by getting {
+            dependencies {
+                api(projects.libraries.libcrypto3.libcrypto3Test)
             }
         }
     }
@@ -43,7 +47,6 @@ tasks.withType<KotlinNativeTest>().configureEach {
     dependsOn(prebuiltSetup)
 
     val libraryPath = prebuiltSetup.get().libDir(HostManager.host.toOpenssl3Target()).absolutePath
-    //TODO - will it work?
     when (HostManager.host) {
         KonanTarget.LINUX_X64                          -> environment("LD_LIBRARY_PATH", libraryPath)
         KonanTarget.MACOS_X64, KonanTarget.MACOS_ARM64 -> environment("DYLD_LIBRARY_PATH", libraryPath)

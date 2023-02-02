@@ -16,6 +16,11 @@ kotlin {
                 api(projects.libraries.libcrypto3.libcrypto3Api)
             }
         }
+        val commonTest by getting {
+            dependencies {
+                api(projects.libraries.libcrypto3.libcrypto3Test)
+            }
+        }
     }
 
     targets.all {
