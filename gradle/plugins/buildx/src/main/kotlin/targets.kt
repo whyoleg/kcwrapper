@@ -9,3 +9,10 @@ fun KotlinMultiplatformExtension.nativeTargets() {
     iosX64()
     iosSimulatorArm64()
 }
+
+fun KotlinMultiplatformExtension.nativeDesktopTargets() {
+    linuxX64()
+    mingwX64()
+    macosX64()
+    macosArm64()
+}

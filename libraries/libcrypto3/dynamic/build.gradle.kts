@@ -8,7 +8,7 @@ plugins {
 }
 
 kotlin {
-    nativeTargets()
+    nativeDesktopTargets()
 
     sourceSets {
         val commonMain by getting {
