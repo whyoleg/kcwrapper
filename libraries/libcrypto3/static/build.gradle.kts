@@ -40,6 +40,6 @@ tasks.withType<CInteropProcess>().configureEach {
     dependsOn(prebuiltSetup)
     settings.extraOpts(
         "-libraryPath",
-        prebuiltSetup.get().libDir(konanTarget.toOpenssl3Target()).absolutePath
+        prebuiltSetup.get().dynamicLibDir(konanTarget.toOpenssl3Target()).absolutePath
     )
 }
