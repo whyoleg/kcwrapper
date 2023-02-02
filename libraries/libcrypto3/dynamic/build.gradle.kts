@@ -1,4 +1,6 @@
+import dev.whyoleg.kcwrapper.gradle.plugin.*
 import org.jetbrains.kotlin.gradle.plugin.mpp.*
+import org.jetbrains.kotlin.gradle.tasks.*
 
 plugins {
     id("buildx-multiplatform-library")
@@ -34,10 +36,10 @@ kotlin {
     }
 }
 
-//tasks.withType<KotlinNativeLink>().configureEach {
-//    dependsOn(prebuiltSetup)
-//    binary.linkerOpts("-L${prebuiltSetup.get().libDir(binary.target.konanTarget.toOpenssl3Target()).absolutePath}")
-//}
+tasks.withType<KotlinNativeLink>().configureEach {
+    dependsOn(prebuiltSetup)
+    binary.linkerOpts("-L${prebuiltSetup.get().libDir(binary.target.konanTarget.toOpenssl3Target()).absolutePath}")
+}
 
 //tasks.withType<KotlinNativeTest>().configureEach {
 //    dependsOn(prebuiltSetup)
