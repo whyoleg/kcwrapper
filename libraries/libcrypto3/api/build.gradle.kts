@@ -7,6 +7,8 @@ plugins {
     id("dev.whyoleg.kcwrapper")
 }
 
+description = "kcwrapper libcrypto3 declarations"
+
 kotlin {
     nativeTargets()
 

@@ -9,6 +9,8 @@ plugins {
     id("dev.whyoleg.kcwrapper")
 }
 
+description = "kcwrapper libcrypto3 with dynamic linking"
+
 kotlin {
     nativeDesktopTargets()
 

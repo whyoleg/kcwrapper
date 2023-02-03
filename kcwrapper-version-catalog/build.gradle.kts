@@ -1,7 +1,9 @@
 plugins {
     `version-catalog`
-    `maven-publish`
+    id("buildx-publish")
 }
+
+description = "kcwrapper version catalog"
 
 catalog {
     versionCatalog {
