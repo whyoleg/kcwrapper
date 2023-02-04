@@ -1,12 +1,6 @@
 name: Publish snapshot
 on: [ workflow_call, workflow_dispatch ]
 
-env:
-  ORG_GRADLE_PROJECT_signingKey: ${{secrets.signingKey}}
-  ORG_GRADLE_PROJECT_signingPassword: ${{secrets.signingPassword}}
-  ORG_GRADLE_PROJECT_sonatypeUsername: ${{secrets.sonatypeUsername}}
-  ORG_GRADLE_PROJECT_sonatypePassword: ${{secrets.sonatypePassword}}
-
 jobs:
   publish:
     runs-on: macos-latest
@@ -29,8 +23,19 @@ jobs:
         with:
           arguments: publishToMavenLocal --scan --info
           cache-disabled: true
+        env:
+          ORG_GRADLE_PROJECT_signingKey: ${{secrets.signingKey}}
+          ORG_GRADLE_PROJECT_signingPassword: ${{secrets.signingPassword}}
+          ORG_GRADLE_PROJECT_sonatypeUsername: ${{secrets.sonatypeUsername}}
+          ORG_GRADLE_PROJECT_sonatypePassword: ${{secrets.sonatypePassword}}
+
       - name: Publish snapshot to Sonatype
         uses: gradle/gradle-build-action@v2
         with:
           arguments: publishAllPublicationsToSnapshotRepository --scan --info
           cache-disabled: true
+        env:
+          ORG_GRADLE_PROJECT_signingKey: ${{secrets.signingKey}}
+          ORG_GRADLE_PROJECT_signingPassword: ${{secrets.signingPassword}}
+          ORG_GRADLE_PROJECT_sonatypeUsername: ${{secrets.sonatypeUsername}}
+          ORG_GRADLE_PROJECT_sonatypePassword: ${{secrets.sonatypePassword}}
