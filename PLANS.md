@@ -16,6 +16,11 @@
 
 * [ ] libcrypto/libssl build for JVM and JS/WASM with minimal set of declarations (check skiko)
 * [ ] better dynamic testing support
+* [ ] conan integration
+    * [ ] step 1: integrate conan into gradle plugin to build library for current OS
+    * [ ] step 2: build toolchain for cross compile on macOS
+    * [ ] step 3: build toolchain for cross compile on linux (may be windows)
+* [ ] vcpkg integration
 
 # Notes
 
