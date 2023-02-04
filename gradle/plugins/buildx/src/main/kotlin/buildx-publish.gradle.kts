@@ -10,6 +10,7 @@ val signingKey: String? by project
 val signingPassword: String? by project
 
 signing {
+    isRequired = sonatypeUsername != null && sonatypePassword != null
     useInMemoryPgpKeys(signingKey, signingPassword)
     sign(publishing.publications)
 }
