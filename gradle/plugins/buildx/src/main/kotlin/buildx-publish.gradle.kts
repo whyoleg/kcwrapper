@@ -10,7 +10,6 @@ val signingKey: String? by project
 val signingPassword: String? by project
 
 signing {
-    isRequired = !version.toString().endsWith("-SNAPSHOT")
     useInMemoryPgpKeys(signingKey, signingPassword)
     sign(publishing.publications)
 }

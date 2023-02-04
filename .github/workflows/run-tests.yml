@@ -2,7 +2,7 @@ name: Run tests on all platforms
 on: [ workflow_call, workflow_dispatch ]
 
 jobs:
-  default-test:
+  test:
     name: Run tests
     runs-on: ${{ matrix.os }}
     strategy:
