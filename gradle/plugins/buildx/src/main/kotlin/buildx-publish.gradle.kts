@@ -22,7 +22,7 @@ publishing {
     repositories {
         maven {
             name = "snapshot"
-            url = uri("https:///s01.oss.sonatype.org/content/repositories/snapshots/")
+            url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
             credentials {
                 username = sonatypeUsername
                 password = sonatypePassword
@@ -30,7 +30,7 @@ publishing {
         }
         maven {
             name = "mavenCentral"
-            url = uri("https:///s01.oss.sonatype.org/service/local/staging/deploy/maven2")
+            url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
             credentials {
                 username = sonatypeUsername
                 password = sonatypePassword
