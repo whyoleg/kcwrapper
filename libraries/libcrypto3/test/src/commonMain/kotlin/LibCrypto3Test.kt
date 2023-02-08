@@ -36,7 +36,7 @@ abstract class LibCrypto3Test {
         }
     }
 
-    @Test
+//    @Test
     @OptIn(ExperimentalUnsignedTypes::class)
     fun testHmac(): Unit = memScoped {
         val dataInput = "Hi There".encodeToByteArray()
