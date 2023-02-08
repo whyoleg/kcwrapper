@@ -13,8 +13,8 @@ abstract class LibCrypto3Test {
         assertEquals(3, OPENSSL_version_major().toInt())
     }
 
-    @OptIn(ExperimentalUnsignedTypes::class)
     @Test
+    @OptIn(ExperimentalUnsignedTypes::class)
     fun testSha() {
         val md = EVP_MD_fetch(null, "SHA256", null)
         try {
@@ -35,41 +35,32 @@ abstract class LibCrypto3Test {
             EVP_MD_free(md)
         }
     }
-}
 
+    @Test
+    @OptIn(ExperimentalUnsignedTypes::class)
+    fun testHmac(): Unit = memScoped {
+        val dataInput = "Hi There".encodeToByteArray()
+        val hashAlgorithm = "SHA256"
+        val key = parseHexBinary("0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b")
 
-private const val hexCode = "0123456789ABCDEF"
+        val mac = EVP_MAC_fetch(null, "HMAC", null)
+        val context = EVP_MAC_CTX_new(mac)
+        try {
+            val params = allocArrayOf(
+                OSSL_PARAM_construct_utf8_string("digest".cstr.ptr, hashAlgorithm.cstr.ptr, 0).ptr,
+                OSSL_PARAM_construct_end().ptr
+            )
+            checkError(EVP_MAC_init(context, key.asUByteArray().refTo(0), key.size.convert(), params[0]))
 
-private fun parseHexBinary(s: String): ByteArray {
-    val len = s.length
-    require(len % 2 == 0) { "HexBinary string must be even length" }
-    val bytes = ByteArray(len / 2)
-    var i = 0
+            val signature = ByteArray(EVP_MAC_CTX_get_mac_size(context).convert())
 
-    while (i < len) {
-        val h = hexToInt(s[i])
-        val l = hexToInt(s[i + 1])
-        require(!(h == -1 || l == -1)) { "Invalid hex chars: ${s[i]}${s[i + 1]}" }
+            checkError(EVP_MAC_update(context, dataInput.fixEmpty().asUByteArray().refTo(0), dataInput.size.convert()))
+            checkError(EVP_MAC_final(context, signature.asUByteArray().refTo(0), null, signature.size.convert()))
 
-        bytes[i / 2] = ((h shl 4) + l).toByte()
-        i += 2
+            assertEquals("b0344c61d8db38535ca8afceaf0bf12b881dc200c9833da726e9376c2e32cff7", printHexBinary(signature))
+        } finally {
+            EVP_MAC_CTX_free(context)
+            EVP_MAC_free(mac)
+        }
     }
-
-    return bytes
-}
-
-private fun hexToInt(ch: Char): Int = when (ch) {
-    in '0'..'9' -> ch - '0'
-    in 'A'..'F' -> ch - 'A' + 10
-    in 'a'..'f' -> ch - 'a' + 10
-    else        -> -1
-}
-
-private fun printHexBinary(data: ByteArray, lowerCase: Boolean = true): String {
-    val r = StringBuilder(data.size * 2)
-    for (b in data) {
-        r.append(hexCode[b.toInt() shr 4 and 0xF])
-        r.append(hexCode[b.toInt() and 0xF])
-    }
-    return if (lowerCase) r.toString().lowercase() else r.toString()
 }

@@ -1,3 +1,4 @@
 package = dev.whyoleg.kcwrapper.libcrypto3.cinterop
 headerFilter = openssl/*
-headers = openssl/evp.h
+headers = openssl/evp.h openssl/err.h
+noStringConversion = OSSL_PARAM_construct_utf8_string

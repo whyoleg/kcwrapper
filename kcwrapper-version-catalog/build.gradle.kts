@@ -3,7 +3,7 @@ plugins {
     id("buildx-publish")
 }
 
-description = "kcwrapper version catalog"
+description = "kcwrapper Gradle Version Catalog"
 
 catalog {
     versionCatalog {
