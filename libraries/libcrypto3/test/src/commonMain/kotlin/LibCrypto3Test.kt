@@ -36,7 +36,7 @@ abstract class LibCrypto3Test {
         }
     }
 
-//    @Test
+    @Test
     @OptIn(ExperimentalUnsignedTypes::class)
     fun testHmac(): Unit = memScoped {
         val dataInput = "Hi There".encodeToByteArray()
@@ -46,11 +46,7 @@ abstract class LibCrypto3Test {
         val mac = EVP_MAC_fetch(null, "HMAC", null)
         val context = EVP_MAC_CTX_new(mac)
         try {
-            val params = allocArrayOf(
-                OSSL_PARAM_construct_utf8_string("digest".cstr.ptr, hashAlgorithm.cstr.ptr, 0).ptr,
-                OSSL_PARAM_construct_end().ptr
-            )
-            checkError(EVP_MAC_init(context, key.asUByteArray().refTo(0), key.size.convert(), params[0]))
+            checkError(EVP_MAC_init_HMAC(context, key.asUByteArray().refTo(0), key.size.convert(), hashAlgorithm))
 
             val signature = ByteArray(EVP_MAC_CTX_get_mac_size(context).convert())
 

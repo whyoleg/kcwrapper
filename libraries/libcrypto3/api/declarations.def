@@ -2,3 +2,13 @@ package = dev.whyoleg.kcwrapper.libcrypto3.cinterop
 headerFilter = openssl/*
 headers = openssl/evp.h openssl/err.h
 noStringConversion = OSSL_PARAM_construct_utf8_string
+
+
+---
+
+static inline int EVP_MAC_init_HMAC(EVP_MAC_CTX *ctx, const unsigned char *key, size_t keylen, const char *digest_name) {
+    OSSL_PARAM params[2], *p = params;
+    *p++ = OSSL_PARAM_construct_utf8_string("digest", digest_name, 0);
+    *p = OSSL_PARAM_construct_end();
+    return EVP_MAC_init(ctx, key, keylen, params);
+}
