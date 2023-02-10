@@ -1,21 +1,4 @@
 package = dev.whyoleg.kcwrapper.libcrypto3.cinterop
 headerFilter = openssl/*
-headers = openssl/evp.h openssl/err.h
-noStringConversion = OSSL_PARAM_construct_utf8_string
-
-
----
-
-static inline int EVP_MAC_init_HMAC(EVP_MAC_CTX *ctx, const unsigned char *key, size_t keylen, const char *digest_name) {
-    OSSL_PARAM params[2], *p = params;
-    *p++ = OSSL_PARAM_construct_utf8_string("digest", digest_name, 0);
-    *p = OSSL_PARAM_construct_end();
-    return EVP_MAC_init(ctx, key, keylen, params);
-}
-
-static inline int EVP_PKEY_CTX_set_params_ECDSA(EVP_PKEY_CTX *ctx, const char *curve_name) {
-    OSSL_PARAM params[2], *p = params;
-    *p++ = OSSL_PARAM_construct_utf8_string("group", curve_name, 0);
-    *p = OSSL_PARAM_construct_end();
-    return EVP_PKEY_CTX_set_params(ctx, params);
-}
+headers = openssl/evp.h openssl/err.h openssl/encoder.h openssl/decoder.h
+noStringConversion = OSSL_PARAM_construct_utf8_string OSSL_ENCODER_CTX_new_for_pkey OSSL_DECODER_CTX_new_for_pkey

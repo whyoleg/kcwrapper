@@ -67,3 +67,10 @@ internal fun printHexBinary(data: ByteArray, lowerCase: Boolean = true): String 
     }
     return if (lowerCase) r.toString().lowercase() else r.toString()
 }
+
+internal fun NativePlacement.OSSL_PARAM_array(vararg values: CValue<OSSL_PARAM>): CArrayPointer<OSSL_PARAM> {
+    val params = allocArray<OSSL_PARAM>(values.size + 1)
+    values.forEachIndexed { index, value -> value.place(params[index].ptr) }
+    OSSL_PARAM_construct_end().place(params[values.size].ptr)
+    return params
+}

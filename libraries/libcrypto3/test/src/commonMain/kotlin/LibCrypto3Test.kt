@@ -46,8 +46,16 @@ abstract class LibCrypto3Test {
         val mac = EVP_MAC_fetch(null, "HMAC", null)
         val context = EVP_MAC_CTX_new(mac)
         try {
-            checkError(EVP_MAC_init_HMAC(context, key.asUByteArray().refTo(0), key.size.convert(), hashAlgorithm))
-
+            checkError(
+                EVP_MAC_init(
+                    ctx = context,
+                    key = key.asUByteArray().refTo(0),
+                    keylen = key.size.convert(),
+                    params = OSSL_PARAM_array(
+                        OSSL_PARAM_construct_utf8_string("digest".cstr.ptr, hashAlgorithm.cstr.ptr, 0)
+                    )
+                )
+            )
             val signature = ByteArray(EVP_MAC_CTX_get_mac_size(context).convert())
 
             checkError(EVP_MAC_update(context, dataInput.fixEmpty().asUByteArray().refTo(0), dataInput.size.convert()))
