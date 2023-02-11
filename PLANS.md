@@ -9,6 +9,8 @@
 
 * [ ] need https://youtrack.jetbrains.com/issue/KT-51517/C-Interop-Commonizer-Fails-On-Classifier-That-Doesnt-Exist
 * [ ] libssl support dependent on libcrypto
+    * [ ] need to declare all **crypto** headers in libcrypto, or they will be imported in libssl
+    * [ ] another idea is to exclude some headers at all
 * [ ] libcurl support dependent on libssl
 * [ ] libtd support dependent on libssl
 

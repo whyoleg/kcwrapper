@@ -1,16 +1,14 @@
+import dev.whyoleg.kcwrapper.gradle.plugin.*
 import org.jetbrains.kotlin.gradle.plugin.mpp.*
 import org.jetbrains.kotlin.gradle.tasks.*
 import org.jetbrains.kotlin.konan.target.*
 
 plugins {
     id("buildx-multiplatform-library")
+    id("dev.whyoleg.kcwrapper")
 }
 
-val unzipPrebuiltOpenSSL3 = parent!!.tasks.named<Sync>("unzipPrebuiltOpenSSL3")
-
-tasks.withType<CInteropProcess>().configureEach {
-    dependsOn(unzipPrebuiltOpenSSL3)
-}
+description = "kcwrapper libssl3 with static linking"
 
 kotlin {
     nativeTargets()
@@ -21,31 +19,30 @@ kotlin {
                 api(projects.libraries.libssl3.libssl3Api)
             }
         }
-    }
-
-    targets.all {
-        return@all
-        if (this !is KotlinNativeTarget) return@all
-
-        val prebuiltName = when (konanTarget) {
-            KonanTarget.IOS_ARM64           -> "ios-device-arm64"
-            KonanTarget.IOS_SIMULATOR_ARM64 -> "ios-simulator-arm64"
-            KonanTarget.IOS_X64             -> "ios-simulator-x64"
-            KonanTarget.LINUX_X64           -> "linux-x64"
-            KonanTarget.MACOS_ARM64         -> "macos-arm64"
-            KonanTarget.MACOS_X64           -> "macos-x64"
-            KonanTarget.MINGW_X64           -> "mingw-x64"
-            else                            -> TODO("Unsupported target: $konanTarget")
-        }
-
-        val main by compilations.getting {
-            val api by cinterops.creating {
-                defFile("linking.def")
-                extraOpts(
-                    "-libraryPath",
-                    unzipPrebuiltOpenSSL3.get().destinationDir.resolve("$prebuiltName/lib").absolutePath,
-                )
+        val commonTest by getting {
+            dependencies {
+                api(projects.libraries.libssl3.libssl3Test)
             }
         }
     }
+
+    targets.all {
+        if (this !is KotlinNativeTarget) return@all
+
+        val main by compilations.getting {
+            val static by cinterops.creating {
+                defFile("linking.def")
+            }
+        }
+    }
+}
+
+val prebuiltSetup = kcwrapper.root.openssl3PrebuiltSetupTaskProvider
+
+tasks.withType<CInteropProcess>().configureEach {
+    dependsOn(prebuiltSetup)
+    settings.extraOpts(
+        "-libraryPath",
+        prebuiltSetup.get().staticLibDir(konanTarget.toOpenssl3Target()).absolutePath
+    )
 }

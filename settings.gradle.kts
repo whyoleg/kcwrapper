@@ -37,5 +37,6 @@ fun includeLibrary(name: String) {
 }
 
 includeLibrary("libcrypto3")
+includeLibrary("libssl3")
 
 include("kcwrapper-version-catalog")

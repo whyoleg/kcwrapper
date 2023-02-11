@@ -1,6 +1,5 @@
 import dev.whyoleg.kcwrapper.gradle.plugin.*
 import org.jetbrains.kotlin.gradle.plugin.mpp.*
-import org.jetbrains.kotlin.gradle.targets.native.tasks.*
 import org.jetbrains.kotlin.gradle.tasks.*
 import org.jetbrains.kotlin.konan.target.*
 

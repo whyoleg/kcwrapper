@@ -1,16 +1,17 @@
+import dev.whyoleg.kcwrapper.gradle.plugin.*
 import org.jetbrains.kotlin.gradle.plugin.mpp.*
-import org.jetbrains.kotlin.gradle.targets.native.*
 import org.jetbrains.kotlin.gradle.tasks.*
 import org.jetbrains.kotlin.konan.target.*
 
 plugins {
     id("buildx-multiplatform-library")
+    id("dev.whyoleg.kcwrapper")
 }
 
-val unzipPrebuiltOpenSSL3 = parent!!.tasks.named<Sync>("unzipPrebuiltOpenSSL3")
+description = "kcwrapper libssl3 with dynamic linking"
 
 kotlin {
-    nativeTargets()
+    nativeDesktopTargets()
 
     sourceSets {
         val commonMain by getting {
@@ -18,58 +19,25 @@ kotlin {
                 api(projects.libraries.libssl3.libssl3Api)
             }
         }
-    }
-
-    targets.all {
-        return@all
-        if (this !is KotlinNativeTarget) return@all
-
-        val prebuiltName = when (konanTarget) {
-            KonanTarget.IOS_ARM64           -> "ios-device-arm64"
-            KonanTarget.IOS_SIMULATOR_ARM64 -> "ios-simulator-arm64"
-            KonanTarget.IOS_X64             -> "ios-simulator-x64"
-            KonanTarget.LINUX_X64           -> "linux-x64"
-            KonanTarget.MACOS_ARM64         -> "macos-arm64"
-            KonanTarget.MACOS_X64           -> "macos-x64"
-            KonanTarget.MINGW_X64           -> "mingw-x64"
-            else                            -> TODO("Unsupported target: $konanTarget")
-        }
-
-        val main by compilations.getting {
-            val api by cinterops.creating {
-                defFile("linking.def")
-            }
-        }
-
-        if (this !is KotlinNativeTargetWithTests<*>) return@all
-
-        testRuns.all {
-            executionSource.binary.apply {
-                linkTask.dependsOn(unzipPrebuiltOpenSSL3)
-                linkerOpts("-L${unzipPrebuiltOpenSSL3.get().destinationDir.resolve("$prebuiltName/lib").absolutePath}")
-            }
-            this as AbstractKotlinNativeTestRun<*>
-
-            //TODO: recheck this
-            executionTask.configure {
-                when (konanTarget) {
-                    KonanTarget.LINUX_X64 -> {
-                        environment(
-                            "LD_LIBRARY_PATH",
-                            unzipPrebuiltOpenSSL3.get().destinationDir.resolve("$prebuiltName/lib").absolutePath
-                        )
-                    }
-                    KonanTarget.MACOS_X64 -> {
-                        environment(
-                            "DYLD_LIBRARY_PATH",
-                            unzipPrebuiltOpenSSL3.get().destinationDir.resolve("$prebuiltName/lib").absolutePath
-                        )
-                    }
-                    else                  -> {
-                        //do nothing
-                    }
-                }
+        val commonTest by getting {
+            dependencies {
+                api(projects.libraries.libssl3.libssl3Test)
             }
         }
     }
+}
+
+if (HostManager.host.family == Family.LINUX) {
+    val target = HostManager.host.toOpenssl3Target()
+    val prebuiltSetup = kcwrapper.root.openssl3PrebuiltSetupTaskProvider
+
+    tasks.withType<KotlinNativeLink>().configureEach {
+        dependsOn(prebuiltSetup)
+        binary.linkerOpts("-L${prebuiltSetup.get().dynamicLibDir(target).absolutePath}")
+    }
+//    tasks.withType<KotlinNativeTest>().configureEach {
+//        dependsOn(prebuiltSetup)
+//        val libraryPath = prebuiltSetup.get().dynamicLibDir(target).absolutePath
+//        environment("LD_LIBRARY_PATH", libraryPath)
+//    }
 }
