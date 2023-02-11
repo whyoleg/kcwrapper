@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
 plugins {
-    kotlin("jvm") version "1.8.0"
+    kotlin("jvm") version "1.8.20-Beta"
     id("com.gradle.plugin-publish") version "1.0.0"
     id("com.github.ben-manes.versions") version "0.44.0"
 }

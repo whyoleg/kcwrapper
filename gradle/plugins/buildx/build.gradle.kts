@@ -3,5 +3,5 @@ plugins {
 }
 
 dependencies {
-    implementation(kotlin("gradle-plugin", "1.8.0"))
+    implementation(kotlin("gradle-plugin", "1.8.20-Beta"))
 }
